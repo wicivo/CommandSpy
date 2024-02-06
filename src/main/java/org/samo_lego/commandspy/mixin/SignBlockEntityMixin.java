@@ -14,13 +14,11 @@ import org.samo_lego.commandspy.CommandSpy;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static org.samo_lego.commandspy.CommandSpy.MODID;
 import static org.samo_lego.commandspy.CommandSpy.config;
@@ -35,15 +33,7 @@ public abstract class SignBlockEntityMixin {
         throw new AssertionError();
     }
 
-    @Inject(
-            method = "executeClickCommandsIfPresent",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/commands/Commands;performPrefixedCommand(Lnet/minecraft/commands/CommandSourceStack;Ljava/lang/String;)I"
-            ),
-            locals = LocalCapture.CAPTURE_FAILHARD
-
-    )
+    @Unique
     private void catchSignCommand(Player player, Level level, BlockPos blockPos, boolean bl, CallbackInfoReturnable<Boolean> cir, boolean bl2, Component[] var6, int var7, int var8, Component component, Style style, ClickEvent clickEvent) {
         if (config.logging.logSignCommands) {
 
@@ -51,7 +41,7 @@ public abstract class SignBlockEntityMixin {
             String message = CommandSpy.config.messages.signMessageStyle;
 
             // Getting other info
-            String dimension = self.getLevel().dimension().location().toString();
+            String dimension = Objects.requireNonNull(self.getLevel()).dimension().location().toString();
             int x = self.getBlockPos().getX();
             int y = self.getBlockPos().getY();
             int z = self.getBlockPos().getZ();
