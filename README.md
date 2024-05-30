@@ -23,4 +23,4 @@ Need to destroy that nasty repeating command block sending `/kill @e`?
 
 ## License
 
-This mod is licensed under `MIT` license.
+This mod is licensed under `MIT` license
